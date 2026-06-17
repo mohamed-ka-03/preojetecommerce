@@ -2,15 +2,21 @@ services:
 
   frontend:
     build: ./frontend
+    container_name: bs_frontend
+    working_dir: /app
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend:/app
+      - ./frontend:/app           # Synchronise ton code pour le live-reload
+      - /app/node_modules         # CRUCIAL : Empêche ton PC d'écraser les packages du conteneur
+      - /app/.next                # Isole le cache de build Next.js
     depends_on:
       - backend
 
   backend:
     build: ./backend
+    container_name: bs_backend
+    working_dir: /app
     ports:
       - "8000:8000"
     volumes:
@@ -23,14 +29,18 @@ services:
 
   db:
     image: postgres:17
+    container_name: bs_postgres
     restart: always
     env_file:
       - .env
+    ports:
+      - "5432:5432"               # Optionnel : permet de te connecter à la DB depuis ton PC (ex: DBeaver, PgAdmin)
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
   redis:
-    image: redis:8-alpine
+    image: redis:7-alpine        # Note : Préfère la version 7-alpine stable, la 8 est encore en développement
+    container_name: bs_redis
 
 volumes:
   postgres_data:
