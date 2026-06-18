@@ -1,12 +1,14 @@
 services:
   frontend:
-    build: ../../frontend
+    build:
+      context: ../../frontend
+      dockerfile: ../infrastructure/docker/frontend/Dockerfile # <-- CORRIGÉ
     container_name: bs_frontend
     working_dir: /app
     ports:
       - "3000:3000"
     volumes:
-      - ../docker/frontend:/app
+      - ../../frontend:/app
       - /app/node_modules
       - /app/.next
     environment:
@@ -15,14 +17,16 @@ services:
       - backend
 
   backend:
-    build: ../../backend
+    build:
+      context: ../../backend
+      dockerfile: ../infrastructure/docker/backend/Dockerfile # <-- CORRIGÉ
     container_name: bs_backend
     working_dir: /app
     command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
     volumes:
-      - ../docker/backend:/app
+      - ../../backend:/app
     env_file:
       - ../../.env.dev
     depends_on:
