@@ -50,5 +50,16 @@ services:
     ports:
       - "6379:6379"
 
+  nginx:
+    image: nginx:alpine
+    container_name: bs_nginx
+    ports:
+      - "80:80"             
+    volumes:
+      - ../docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro # Monte le fichier en lecture seule
+    depends_on:
+      - frontend
+      - backend
+
 volumes:
   postgres_dev_data:
