@@ -16,7 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.http import JsonResponse
+
+def test_connection(request):
+    return JsonResponse({"status": "success", "message": "Connexion établie entre Next.js et Django !"})
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/test/', test_connection),
 ]
